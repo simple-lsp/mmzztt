@@ -37,7 +37,7 @@ let load = function (id, prefix, list) {
 
 app.post('/mzt/download', (req, res) => {
   let {id, imgUrlPrefix, imgs} = req.body
-  fs.mkdirSync(`./crawler/${id}`)
+  fs.mkdirSync(`./photo/${id}`)
   load(id, imgUrlPrefix, JSON.parse(imgs))
   res.send({success: true, message: '已开始下载'})
 })
