@@ -35,6 +35,12 @@ let load = function (id, prefix, list) {
   // .on('error', _ => res.send({success: false, message: e.toString()}))
 }
 
+app.post('/mzt/proxy', (req, res) => {
+  let {url} = req.body
+  console.log('get', url)
+  request({url, headers}, (error, response, body) => res.send(body))
+})
+
 app.post('/mzt/download', (req, res) => {
   let {id, imgUrlPrefix, imgs} = req.body
   fs.mkdirSync(`./photo/${id}`)

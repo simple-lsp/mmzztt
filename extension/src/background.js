@@ -24,16 +24,12 @@ window.chrome.storage.local.get(['namesHacked'], result => {
 
 const commonJS = '//z.iimzt.com/style/common.js'
 const decJS = '//z.iimzt.com/style/view/'
-const headers = {
-  // 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36',
-  'referer': 'https://mmzztt.com/'
-}
 
 function getSource(url) {
-  let name = url.split('/').pop()
+  let name = url.split('?')[0].split('/').pop()
   if (names[name]) return
   console.log('getSource', url)
-  axios.get(url, {headers}).then(res => {
+  axios.post('http://localhost:3000/mzt/proxy', {url}).then(res => {
     let content = hack(res.data)
     names[name] = true
     window.chrome.storage.local.set({[name]: content, 'namesHacked': names})
@@ -87,7 +83,7 @@ window.chrome.webRequest.onBeforeRequest.addListener(details => {
   let u = details.url
   if (u.includes(commonJS)) return {redirectUrl: extension.url('hack/common.js')}
   if (u.includes(decJS) && u.includes('?v=')) {
-    getSource(u.split('?')[0])
+    getSource(u)
     return {cancel: true}
   }
 }, {urls: [/*\/\/z.iimzt.com\/style\/*/], types: ['script']}, ['blocking'])
